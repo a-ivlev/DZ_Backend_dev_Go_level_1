@@ -1,0 +1,18 @@
+name: lint
+env:
+  HASH_COMMIT: "${{ github.sha }}"
+
+on: [push]  
+jobs:
+ lint:
+  name: lint
+  runs-on: ubuntu-latest
+  steps:
+  - uses: actions/checkout@v2
+  - name: Print chache commit
+    run : echo "lint commit ${{ env.HASH_COMMIT }}"
+  - name: golangci-lint
+    uses: golangci/golangci-lint-action@v2
+    with:
+     version: v1.29
+     args: -c golangci-lint.yaml

@@ -1,0 +1,20 @@
+name: test
+env:
+  HASH_COMMIT: "${{ github.sha }}"
+
+on: [push]
+jobs:
+  test:
+   name: test
+   runs-on: ubuntu-latest
+   steps:
+   - name: Install Go
+     uses: actions/setup-go@v2
+     with:
+      go-version: 1.17.x
+   - name: Test code
+     uses: actions/checkout@v2   
+   - name: Print chache commit
+     run : echo "test commit ${{ env.HASH_COMMIT }}"
+   - name: Test
+     run : go test ./...
