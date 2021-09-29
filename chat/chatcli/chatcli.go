@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"io"
 	"log"
@@ -15,13 +14,6 @@ func main() {
 		log.Fatal(err)
 	}
 	defer conn.Close()
-
-	fmt.Println("Введите свой никнейм:")
-	nikname := bufio.NewScanner(os.Stdin)
-	if err == io.EOF {
-		nikname.Scan()
-		fmt.Fprintf(conn, nikname.Text())
-	}
 
 	go func() {
 		io.Copy(os.Stdout, conn)

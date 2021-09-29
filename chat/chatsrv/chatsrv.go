@@ -38,6 +38,7 @@ func handleConn(conn net.Conn) {
 	ch := make(chan string)
 	go clientWriter(conn, ch)
 
+	fmt.Fprintln(conn, "Введите свой никнейм:")
 	input := bufio.NewScanner(conn)
 	input.Scan()
 	nik := input.Text()
@@ -47,12 +48,12 @@ func handleConn(conn net.Conn) {
 		who = fmt.Sprintf("[ %s ]", nik)
 	}
 
-	// Сообщение приходит всем пользователям, что подключился новый пользователь.
+	// Выводит в консоль подключившегося пользователя сообщение как он зарегистрировался на сервере.
 	ch <- fmt.Sprintf("You are %s", who)
-	// Это сообщение печатается на сервере, о подключении нового пользователя.
+	// Сообщение отправляется всем пользователям, о подключении нового пользователя.
 	messages <- fmt.Sprintf("%s: has arrived", who)
 	entering <- ch
-
+	// Выводит в консоль сервера сообщение о подключении нового пользователя.
 	log.Printf( "%s has arrived", who)
 
 	//input := bufio.NewScanner(conn)
@@ -61,7 +62,6 @@ func handleConn(conn net.Conn) {
 	}
 	leaving <- ch
 	messages <- fmt.Sprintf( "%s: has left", who)
-
 }
 
 func clientWriter(conn net.Conn, ch <-chan string) {
