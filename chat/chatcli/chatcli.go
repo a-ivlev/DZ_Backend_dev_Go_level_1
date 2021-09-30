@@ -14,19 +14,36 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer conn.Close()
+	defer func(conn net.Conn) {
+		err := conn.Close()
+		if err != nil {
+			log.Println(err)
+		}
+	}(conn)
 
 	go func() {
-		io.Copy(os.Stdout, conn)
+		_, err := io.Copy(os.Stdout, conn)
+		if err != nil {
+			log.Println(err)
+			return
+		}
 	}()
 
 	input := bufio.NewScanner(os.Stdin)
 	for input.Scan() {
 		if input.Text() == "EXIT" {
-			fmt.Fprintln(conn, input.Text())
+			_, err := fmt.Fprintln(conn, input.Text())
+			if err != nil {
+				log.Println(err)
+				return
+			}
 			break
 		}
-		fmt.Fprintln(conn, input.Text())
+		_, err := fmt.Fprintln(conn, input.Text())
+		if err != nil {
+			log.Println(err)
+			return
+		}
 	}
 
 	fmt.Printf("%s: exit\n", conn.LocalAddr())
