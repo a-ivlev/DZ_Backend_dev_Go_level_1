@@ -23,8 +23,9 @@ func main() {
 	log.Println("Server is started!")
 
 	go broadcaster()
+	var conn net.Conn
 	for {
-		conn, err := listener.Accept()
+		conn, err = listener.Accept()
 		if err != nil {
 			log.Print(err)
 			continue
@@ -38,6 +39,9 @@ func handleConn(conn net.Conn) {
 	go clientWriter(conn, ch)
 
 	_, err := fmt.Fprintln(conn, "Для отключения от сервера и завершения сеанса нужно набрать EXIT")
+	if err != nil {
+		log.Println(err)
+	}
 	_, err = fmt.Fprintln(conn, "Введите свой никнейм:")
 	if err != nil {
 		log.Println(err)
