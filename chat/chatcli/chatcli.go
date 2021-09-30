@@ -15,14 +15,14 @@ func main() {
 		log.Fatal(err)
 	}
 	defer func(conn net.Conn) {
-		err := conn.Close()
+		err = conn.Close()
 		if err != nil {
 			log.Println(err)
 		}
 	}(conn)
 
 	go func() {
-		_, err := io.Copy(os.Stdout, conn)
+		_, err = io.Copy(os.Stdout, conn)
 		if err != nil {
 			log.Println(err)
 			return
@@ -32,14 +32,14 @@ func main() {
 	input := bufio.NewScanner(os.Stdin)
 	for input.Scan() {
 		if input.Text() == "EXIT" {
-			_, err := fmt.Fprintln(conn, input.Text())
+			_, err = fmt.Fprintln(conn, input.Text())
 			if err != nil {
 				log.Println(err)
 				return
 			}
 			break
 		}
-		_, err := fmt.Fprintln(conn, input.Text())
+		_, err = fmt.Fprintln(conn, input.Text())
 		if err != nil {
 			log.Println(err)
 			return
