@@ -62,14 +62,22 @@ func main() {
 	<-ctx.Done()
 
 	log.Println("done")
-	l.Close()
+	err = l.Close()
+	if err != nil {
+		log.Println(err)
+	}
 	wg.Wait()
 	log.Println("exit")
 }
 
 func handleConn(ctx context.Context, wg *sync.WaitGroup, conn net.Conn, message chan string) {
 	defer wg.Done()
-	defer conn.Close()
+	defer func(conn net.Conn) {
+		err := conn.Close()
+		if err != nil {
+			log.Println(err)
+		}
+	}(conn)
 
 	// Каждую секунду отправлять клиентам текущее время сервера.
 	tck := time.NewTicker(time.Second)
@@ -79,9 +87,15 @@ func handleConn(ctx context.Context, wg *sync.WaitGroup, conn net.Conn, message 
 		case <-ctx.Done():
 			return
 		case t := <-tck.C:
-			fmt.Fprintf(conn, "now: %s\n", t)
+			_, err := fmt.Fprintf(conn, "now: %s\n", t)
+			if err != nil {
+				log.Println(err)
+			}
 		case msg := <-message:
-			fmt.Fprintf(conn, "now: %s\n", msg)
+			_, err := fmt.Fprintf(conn, "now: %s\n", msg)
+			if err != nil {
+				log.Println(err)
+			}
 		}
 	}
 }

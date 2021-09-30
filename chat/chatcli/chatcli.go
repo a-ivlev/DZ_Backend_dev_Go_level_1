@@ -19,15 +19,15 @@ func main() {
 	go func() {
 		io.Copy(os.Stdout, conn)
 	}()
-		input := bufio.NewScanner(os.Stdin)
-		for input.Scan(){
-			if input.Text() == "EXIT" {
-				fmt.Fprintln(conn, input.Text())
-				break
-			}
-			fmt.Fprintln(conn, input.Text())
-		}
 
-	//io.Copy(conn, os.Stdin) // until you send ^Z
+	input := bufio.NewScanner(os.Stdin)
+	for input.Scan() {
+		if input.Text() == "EXIT" {
+			fmt.Fprintln(conn, input.Text())
+			break
+		}
+		fmt.Fprintln(conn, input.Text())
+	}
+
 	fmt.Printf("%s: exit\n", conn.LocalAddr())
 }

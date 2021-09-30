@@ -20,7 +20,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println( "Server is started!")
+	log.Println("Server is started!")
 
 	go broadcaster()
 	for {
@@ -34,13 +34,15 @@ func main() {
 }
 
 func handleConn(conn net.Conn) {
-	defer conn.Close()
-
 	ch := make(chan string)
 	go clientWriter(conn, ch)
 
-	fmt.Fprintln(conn, "Для отключения от сервера и завершения сеанса нужно набрать EXIT")
-	fmt.Fprintln(conn, "Введите свой никнейм:")
+	_, err := fmt.Fprintln(conn, "Для отключения от сервера и завершения сеанса нужно набрать EXIT")
+	_, err = fmt.Fprintln(conn, "Введите свой никнейм:")
+	if err != nil {
+		log.Println(err)
+	}
+
 	input := bufio.NewScanner(conn)
 	input.Scan()
 	nik := input.Text()
@@ -56,7 +58,7 @@ func handleConn(conn net.Conn) {
 	messages <- fmt.Sprintf("%s: has arrived", who)
 	entering <- ch
 	// Выводит в консоль сервера сообщение о подключении нового пользователя.
-	log.Printf( "%s has arrived", who)
+	log.Printf("%s has arrived", who)
 
 	for input.Scan() {
 		if input.Text() == "EXIT" {
@@ -65,13 +67,20 @@ func handleConn(conn net.Conn) {
 		messages <- fmt.Sprintf("%s: %s", who, input.Text())
 	}
 	leaving <- ch
-	messages <- fmt.Sprintf( "%s: has left", who)
+	messages <- fmt.Sprintf("%s: has left", who)
 	log.Printf("%s: has left", who)
+	err = conn.Close()
+	if err != nil {
+		return
+	}
 }
 
 func clientWriter(conn net.Conn, ch <-chan string) {
 	for msg := range ch {
-		fmt.Fprintln(conn, msg)
+		_, err := fmt.Fprintln(conn, msg)
+		if err != nil {
+			log.Println(err)
+		}
 	}
 }
 
