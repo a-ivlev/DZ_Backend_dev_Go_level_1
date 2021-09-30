@@ -12,6 +12,9 @@ import (
 	"time"
 )
 
+// Создаём новый канал для отправки сообщений.
+var message = make(chan string)
+
 func main() {
 	ctx, _ := signal.NotifyContext(context.Background(), os.Interrupt)
 
@@ -27,8 +30,6 @@ func main() {
 
 	// countConn в эту переменную сохраняем количество подключений к серверу.
 	countConn := 0
-	// Создаём новый канал для отправки сообщений.
-	message := make(chan string)
 	// Запускаем горутину, которая будет считывать из консоли сервера сообщения,
 	// и отправлять в канал message.
 	go func(int) {
@@ -52,9 +53,9 @@ func main() {
 				log.Println(err)
 			}
 			if err == nil {
-				countConn++
+				//countConn++
 				wg.Add(1)
-				go handleConn(ctx, wg, conn, message)
+				go handleConn(ctx, wg, conn)
 			}
 		}
 	}()
@@ -70,7 +71,7 @@ func main() {
 	log.Println("exit")
 }
 
-func handleConn(ctx context.Context, wg *sync.WaitGroup, conn net.Conn, message chan string) {
+func handleConn(ctx context.Context, wg *sync.WaitGroup, conn net.Conn) {
 	defer wg.Done()
 	defer func(conn net.Conn) {
 		err := conn.Close()
