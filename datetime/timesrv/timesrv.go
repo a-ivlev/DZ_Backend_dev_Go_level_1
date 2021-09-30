@@ -14,6 +14,7 @@ import (
 
 // Создаём новый канал для отправки сообщений.
 var message = make(chan string)
+
 // countConn в эту переменную сохраняем количество подключений к серверу.
 var countConn int
 
@@ -48,7 +49,8 @@ func main() {
 				return
 			default:
 			}
-			conn, err := l.Accept()
+			var conn net.Conn
+			conn, err = l.Accept()
 			if err != nil {
 				log.Println(err)
 			}
