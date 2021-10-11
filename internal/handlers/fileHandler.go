@@ -18,9 +18,7 @@ func (fs *FileHendler) ServeHTTP(w http.ResponseWriter, r *http.Request)  {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
 	ftype := r.FormValue("type")
-	if strings.HasPrefix(ftype, ".") {
-		ftype = strings.TrimPrefix(ftype, ".")
-	}
+	ftype = strings.TrimPrefix(ftype, ".")
 
 	dir, err := ioutil.ReadDir(fs.PathDir)
 	if err != nil {

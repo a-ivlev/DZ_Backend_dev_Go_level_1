@@ -10,9 +10,6 @@ import (
 	"time"
 )
 
-type UploadHandler struct {
-	dirToServe http.Dir
-}
 
 func main() {
 	dirToServe := http.Dir("/tmp/upload")
@@ -60,6 +57,3 @@ func main() {
 	log.Println("Server stopped gracefully!")
 }
 
-//func (h *UploadHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-//	http.StripPrefix("/upload/", http.FileServer(h.dirToServe))
-//}
