@@ -13,7 +13,7 @@ type FileHendler struct {
 	PathDir string
 }
 
-func (fs *FileHendler) ServeHTTP(w http.ResponseWriter, r *http.Request)  {
+func (fs *FileHendler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
