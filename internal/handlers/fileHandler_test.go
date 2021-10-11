@@ -26,6 +26,29 @@ Name: Текстовый файл.jpeg расширение jpeg размер 0 
 Name: Туманность_Ориона.jpg расширение jpg размер 123284 байт
 `,
 		},
+		"Test 2": {
+			req:     httptest.NewRequest("GET", "/files?type=txt", nil),
+			rr:      httptest.NewRecorder(),
+			handler: &handlers.FileHendler{PathDir: "./test"},
+			status: http.StatusOK,
+			expected: `Name: testfile.txt расширение txt размер 73 байт
+Name: testfile2.txt расширение txt размер 73 байт
+`,
+		},
+		"Test 3": {
+			req:     httptest.NewRequest("GET", "/files?type=jpg", nil),
+			rr:      httptest.NewRecorder(),
+			handler: &handlers.FileHendler{PathDir: "./test"},
+			status: http.StatusOK,
+			expected: "Name: Туманность_Ориона.jpg расширение jpg размер 123284 байт\n",
+		},
+		"Test 4": {
+			req:     httptest.NewRequest("GET", "/files?type=jpeg", nil),
+			rr:      httptest.NewRecorder(),
+			handler: &handlers.FileHendler{PathDir: "./test"},
+			status: http.StatusOK,
+			expected: "Name: Текстовый файл.jpeg расширение jpeg размер 0 байт\n",
+		},
 	}
 
 	for name, cs := range cases {
