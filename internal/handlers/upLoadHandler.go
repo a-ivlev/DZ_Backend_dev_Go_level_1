@@ -40,8 +40,6 @@ func (h *UploadHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// fmt.Fprintf(w, "File %s has been successfully uploaded\n", header.Filename)
 
 	fileLink := h.HostAddr + "/files/" + header.Filename
-	//fmt.Println("fileLink", fileLink, "filePath", filePath)
-	// fmt.Fprintln(w, fileLink)
 
 	req, err := http.NewRequest(http.MethodHead, fileLink, nil)
 	if err != nil {
