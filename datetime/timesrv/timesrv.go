@@ -77,7 +77,6 @@ func main() {
 func handleConn(ctx context.Context, wg *sync.WaitGroup, conn net.Conn) {
 	defer wg.Done()
 	defer func(conn net.Conn) {
-		delete(connMap, &conn)
 		err := conn.Close()
 		if err != nil {
 			log.Println(err)
@@ -90,6 +89,7 @@ func handleConn(ctx context.Context, wg *sync.WaitGroup, conn net.Conn) {
 	for {
 		select {
 		case <-ctx.Done():
+			delete(connMap, &conn)
 			return
 		case t := <-tck.C:
 			_, err := fmt.Fprintf(conn, "now: %s\n", t)
