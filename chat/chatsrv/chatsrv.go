@@ -38,12 +38,10 @@ func handleConn(conn net.Conn) {
 	ch := make(chan string)
 	go clientWriter(conn, ch)
 
-	_, err := fmt.Fprintln(conn, "Для отключения от сервера и завершения сеанса нужно набрать EXIT.\n",
-		"Для смены никнейма необходимо набрать команду 'new nikname' нажать энтер и с новой строки ввести новый никнейм.")
-	if err != nil {
-		log.Println(err)
-	}
-	_, err = fmt.Fprintln(conn, "Введите свой никнейм:")
+	_, err := fmt.Fprintln(conn,
+		"Для отключения от сервера и завершения сеанса нужно набрать EXIT.\n",
+		"Для смены никнейма необходимо набрать команду 'new nikname' нажать энтер и ввести новый никнейм.\n",
+		"Введите свой никнейм:")
 	if err != nil {
 		log.Println(err)
 	}
