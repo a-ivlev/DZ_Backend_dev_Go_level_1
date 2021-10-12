@@ -12,9 +12,6 @@ import (
 	"time"
 )
 
-// Создаём новый канал для отправки сообщений.
-var message = make(chan string)
-
 func main() {
 	// connMap в эту мапу сохраняем подключения к серверу.
 	var connMap = make(map[*net.Conn]struct{})
@@ -35,8 +32,11 @@ func main() {
 	go func() {
 		input := bufio.NewScanner(os.Stdin)
 		for input.Scan() {
-			for range connMap{
-				message <- fmt.Sprintf("timesrv msg: %s", input.Text())
+			for conn := range connMap {
+				_, err = fmt.Fprintf(*conn, "now: %s\n", input.Text())
+				if err != nil {
+					log.Println(err)
+				}
 			}
 		}
 	}()
@@ -90,11 +90,6 @@ func handleConn(ctx context.Context, wg *sync.WaitGroup, conn net.Conn) {
 			return
 		case t := <-tck.C:
 			_, err := fmt.Fprintf(conn, "now: %s\n", t)
-			if err != nil {
-				log.Println(err)
-			}
-		case msg := <-message:
-			_, err := fmt.Fprintf(conn, "now: %s\n", msg)
 			if err != nil {
 				log.Println(err)
 			}
