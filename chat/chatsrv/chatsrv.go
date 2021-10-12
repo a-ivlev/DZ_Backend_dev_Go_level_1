@@ -69,7 +69,7 @@ func handleConn(conn net.Conn) {
 		case "EXIT":
 			break
 		case "new nikname":
-			//leaving <- ch
+			// leaving <- ch
 			messages <- fmt.Sprintf("%s: has left", who)
 			log.Printf("%s: has left", who)
 			input.Scan()
@@ -79,10 +79,10 @@ func handleConn(conn net.Conn) {
 		default:
 			messages <- fmt.Sprintf("%s: %s", who, input.Text())
 		}
-		//if input.Text() == "EXIT" {
+		// if input.Text() == "EXIT" {
 		//	break
-		//}
-		//messages <- fmt.Sprintf("%s: %s", who, input.Text())
+		// }
+		// messages <- fmt.Sprintf("%s: %s", who, input.Text())
 	}
 	leaving <- ch
 	messages <- fmt.Sprintf("%s: has left", who)

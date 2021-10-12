@@ -31,7 +31,7 @@ func main() {
 
 	input := bufio.NewScanner(os.Stdin)
 	for input.Scan() {
-		switch input.Text(){
+		switch input.Text() {
 		case "EXIT":
 			break
 		default:
