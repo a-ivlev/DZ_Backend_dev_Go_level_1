@@ -31,20 +31,16 @@ func main() {
 
 	input := bufio.NewScanner(os.Stdin)
 	for input.Scan() {
-		if input.Text() == "EXIT" {
+		switch input.Text(){
+		case "EXIT":
+			break
+		default:
 			_, err = fmt.Fprintln(conn, input.Text())
 			if err != nil {
 				log.Println(err)
 				return
 			}
-			break
-		}
-		_, err = fmt.Fprintln(conn, input.Text())
-		if err != nil {
-			log.Println(err)
-			return
 		}
 	}
-
 	fmt.Printf("%s: exit\n", conn.LocalAddr())
 }
