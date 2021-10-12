@@ -66,10 +66,6 @@ func handleConn(conn net.Conn) {
 	log.Printf("%s has arrived", who)
 
 	for input.Scan() {
-		// Нужно для клиентов подключенных по телнету
-		if input.Text() == "EXIT" {
-			break
-		}
 		if input.Text() == "new nikname" {
 			input.Scan()
 			nik = input.Text()
@@ -81,6 +77,10 @@ func handleConn(conn net.Conn) {
 			continue
 		}
 		messages <- fmt.Sprintf("%s: %s", who, input.Text())
+		// Нужно для клиентов подключенных по телнету
+		if input.Text() == "EXIT" {
+			break
+		}
 	}
 	leaving <- ch
 	messages <- fmt.Sprintf("%s: has left", who)

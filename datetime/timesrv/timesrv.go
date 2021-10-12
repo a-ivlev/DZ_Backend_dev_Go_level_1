@@ -16,7 +16,6 @@ import (
 var connMap = make(map[*net.Conn]struct{})
 
 func main() {
-
 	ctx, _ := signal.NotifyContext(context.Background(), os.Interrupt)
 
 	cfg := net.ListenConfig{
