@@ -82,7 +82,6 @@ func handleConn(conn net.Conn) {
 		}
 		messages <- fmt.Sprintf("%s: %s", who, input.Text())
 	}
-	log.Println("Telnet EXIT")
 	leaving <- ch
 	messages <- fmt.Sprintf("%s: has left", who)
 	log.Printf("%s: has left", who)
