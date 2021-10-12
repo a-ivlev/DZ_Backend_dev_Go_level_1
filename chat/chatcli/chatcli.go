@@ -45,5 +45,5 @@ func main() {
 			return
 		}
 	}
-	fmt.Printf("%s: exit\n", conn.LocalAddr())
+	fmt.Printf("%s: exit∞\n", conn.LocalAddr())
 }

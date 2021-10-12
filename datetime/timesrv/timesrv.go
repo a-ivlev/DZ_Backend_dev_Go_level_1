@@ -12,9 +12,11 @@ import (
 	"time"
 )
 
+// connMap в эту мапу сохраняем подключения к серверу.
+var connMap = make(map[*net.Conn]struct{})
+
 func main() {
-	// connMap в эту мапу сохраняем подключения к серверу.
-	var connMap = make(map[*net.Conn]struct{})
+
 	ctx, _ := signal.NotifyContext(context.Background(), os.Interrupt)
 
 	cfg := net.ListenConfig{
@@ -75,6 +77,7 @@ func main() {
 func handleConn(ctx context.Context, wg *sync.WaitGroup, conn net.Conn) {
 	defer wg.Done()
 	defer func(conn net.Conn) {
+		delete(connMap, &conn)
 		err := conn.Close()
 		if err != nil {
 			log.Println(err)
