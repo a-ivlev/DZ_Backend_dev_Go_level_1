@@ -38,7 +38,8 @@ func handleConn(conn net.Conn) {
 	ch := make(chan string)
 	go clientWriter(conn, ch)
 
-	_, err := fmt.Fprintln(conn, "Для отключения от сервера и завершения сеанса нужно набрать EXIT")
+	_, err := fmt.Fprintln(conn, "Для отключения от сервера и завершения сеанса нужно набрать EXIT.\n",
+		"Для смены никнейма необходимо набрать команду 'new nikname' нажать энтер и с новой строки ввести новый никнейм.")
 	if err != nil {
 		log.Println(err)
 	}
@@ -65,11 +66,23 @@ func handleConn(conn net.Conn) {
 	log.Printf("%s has arrived", who)
 
 	for input.Scan() {
+		// Нужно для клиентов подключенных по телнету
 		if input.Text() == "EXIT" {
 			break
 		}
+		if input.Text() == "new nikname" {
+			input.Scan()
+			nik = input.Text()
+			messages <- fmt.Sprintf("%s: has left", who)
+			log.Printf("%s: has left", who)
+			who = fmt.Sprintf("[ %s ]", nik)
+			messages <- fmt.Sprintf("%s: has arrived", who)
+			log.Printf("%s has arrived", who)
+			continue
+		}
 		messages <- fmt.Sprintf("%s: %s", who, input.Text())
 	}
+	log.Println("Telnet EXIT")
 	leaving <- ch
 	messages <- fmt.Sprintf("%s: has left", who)
 	log.Printf("%s: has left", who)
