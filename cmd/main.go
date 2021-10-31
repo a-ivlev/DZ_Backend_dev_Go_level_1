@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-
-
 )
 
 func main() {
