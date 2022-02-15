@@ -11,7 +11,7 @@ RUN go mod download
 # Копируем все файлы из директории ./rental локальной машины в директорию /app/rental образа.
 COPY ./rental ./rental
 
-# Запускаем компиляцию программы на go и сохраняем полученный бинарный файл server в директорию /rental/ образа.
+# Запускаем компиляцию программы на go и сохраняем полученный бинарный файл stress-test в директорию /rental/ образа.
 #RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ../rental/server .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -tags netgo -ldflags '-w -extldflags "-static"' -o ../stress-test ./rental/cmd/stress-test
 
