@@ -1,0 +1,52 @@
+version: "3.9"
+
+volumes:
+  postgres_data:
+
+networks:
+  rentalnet:
+
+services:
+
+  registry:
+    container_name: registry
+    image: registry:2
+    ports:
+      - 5000:5000
+    restart: always
+    networks:
+      - rentalnet
+
+  postgres:
+    container_name: pg-base
+    image: postgres:13.1
+    ports:
+      - 5432:5432
+    volumes:
+      - ./initDB:/docker-entrypoint-initdb.d
+#      - /var/lib/postgresql/data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: manager
+      POSTGRES_PASSWORD: qwerty
+      POSTGRES_DB: rental_db
+    restart: always
+    networks:
+      - rentalnet
+
+  stress-test:
+    container_name: stress-test
+    image: 127.0.0.1:5000/stress-test:latest
+    build: .
+    ports:
+      - 8080:8080
+    environment:
+#     Переопределяем переменную окружения установленную в Docerfile.
+      POSTGRES_DSN: "postgres://manager:qwerty@postgres/rental_db?sslmode=disable"
+      PORT: 8080
+    depends_on:
+      - registry
+      - postgres
+    restart: always
+    networks:
+      - rentalnet
